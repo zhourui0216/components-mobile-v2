@@ -5,6 +5,11 @@ export default {
             type: Array,
             required: true
         },
+        // 当前所在滑块的index
+        current: {
+            type: Number,
+            default: 0
+        },
         // 是否显示指示点
         indicatorDots: {
             type: Boolean,
@@ -13,17 +18,12 @@ export default {
         // 指示点颜色
         indicatorColor: {
             type: String,
-            default: "#f5f5f5"
+            default: "rgba(0, 0, 0, 0.4)"
         },
         // 选中指示点颜色
         indicatorActiveColor: {
             type: String,
             default: "#047ef0"
-        },
-        // 圆角
-        fillet: {
-            type: Number,
-            default: 0
         },
         // 是否自动切换
         autoplay: {
@@ -54,6 +54,16 @@ export default {
         springback: {
             type: Boolean,
             default: true
+        },
+        // 宽高比例
+        proportion: {
+            type: String,
+            default: "100:40"
+        },
+        // 圆角
+        fillet: {
+            type: Number,
+            default: 0
         },
     }
 }

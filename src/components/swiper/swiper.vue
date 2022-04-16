@@ -1,6 +1,6 @@
 <template>
-    <div class="swiper" ref="swiper">
-        <div class="swiper-content" :style="{borderRadius: fillet + 'px'}">
+    <div class="swiper">
+        <div class="swiper-content">
             <div class="swiper-slider" ref="slider" @touchstart="pressRegion" @touchmove="slideRegion" @touchend="leaveRegion">
                 <div class="swiper-slider-item" ref="sliderItem" v-for="item,index in data" :key="index">
                     <img :src="item">
@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="indicator" v-if="indicatorDots">
-            <div class="dot" :style="currentIndex==index ? {background: indicatorActiveColor,transition: 'all '+ duration +'ms'} : {background: indicatorColor,transition: 'all 0ms'}" v-for="item,index in data" :key="index">
+            <div class="dot" :style="{background: currentIndex == index ? indicatorActiveColor : indicatorColor}" v-for="item,index in data" :key="index">
                 <!-- 指示点 -->
             </div>
         </div>
@@ -22,6 +22,7 @@ export default {
     data() {
         return {
             swiperWidth: null, // swiper宽度
+            proportionHeight: null, // 比例高度
             pressX: null, // 按下水平坐标
             pressY: null, // 按下垂直坐标
             move: null, // 移动距离
@@ -45,10 +46,23 @@ export default {
          * 添加动画
          * 判断开始自动切换
         **/
-        this.swiperWidth = this.$refs.swiper.clientWidth
-        this.sliderLeft = this.getSliderLeft()
+        this.addTransition()
+        this.swiperWidth = document.querySelector(".swiper").clientWidth
         this.quantity = this.data.length
-        this.elasticForce = this.swiperWidth * 0.4
+        this.elasticForce = (this.swiperWidth * 0.4).toFixed(2)
+
+        this.currentIndex = this.current
+        this.sliderLeft = -(this.swiperWidth * this.currentIndex)
+        this.$refs.slider.style.left = this.sliderLeft + "px"
+
+        // 比例
+        let proportion = this.proportion.split(":")
+        this.proportionHeight = (proportion[1] / proportion[0] * this.swiperWidth).toFixed(2)
+
+        let swiperContent = document.querySelector(".swiper-content")
+        swiperContent.style.height = this.proportionHeight + 'px'
+        swiperContent.style.borderRadius = this.fillet + 'px'
+
 
         this.initSliderItem()
         this.addTransition()
@@ -58,18 +72,7 @@ export default {
     methods: {
         // 初始滑块位置
         initSliderItem() {
-            this.$refs.sliderItem.forEach((i, j) => i.style.left = this.swiperWidth * j + "px")
-        },
-        loopLocation() {
-            // if (!this.circular) return;
-            // console.log("衔接", this.quantity)
-            // if (this.currentIndex === 0) {
-            //     console.log("尾定位")
-            //     this.$refs.sliderItem[this.quantity - 1].style.left = -this.swiperWidth + "px"
-            // } else if (this.currentIndex == this.quantity - 1) {
-            //     console.log("首定位")
-            //     this.$refs.sliderItem[0].style.left = this.swiperWidth * this.quantity + "px"
-            // }
+            this.$refs.sliderItem.forEach((i, j) => i.style.transform = "transLate(" + j * 100 + "%, 0)")
         },
         // 按下区域
         pressRegion(event) {
@@ -183,11 +186,11 @@ export default {
         },
         // 添加过渡
         addTransition() {
-            this.$refs.slider.style.transition = "all " + this.duration + "ms"
+            this.$refs.slider.style.transitionDuration = this.duration + "ms"
         },
         // 移除过渡
         removeTransition() {
-            this.$refs.slider.style.transition = "all 0ms"
+            this.$refs.slider.style.transitionDuration = "0ms"
         },
         // 中止过渡
         terminationTransition() {
@@ -217,15 +220,6 @@ export default {
         getCurrentLeft() {
             return this.$refs.slider.offsetLeft
         },
-        // 设置滑块位置
-        setTransLateX(position) {
-            this.$refs.slider.style.transform = "translateX(" + position + "px)"
-        },
-        // 获取滑块位置
-        getTransLates() {
-            const translates = window.getComputedStyle(this.$refs.slider, null).transform;
-            return translates.match(/[\d.]+/g).splice(-2).map(i => Number(i));
-        },
     },
 }
 </script>
@@ -239,22 +233,24 @@ export default {
 
     .swiper-content {
         width: 100%;
-        height: 220px;
         overflow: hidden;
 
         .swiper-slider {
             width: 100%;
             height: 100%;
             position: relative;
-            left: 0;
 
             .swiper-slider-item {
                 width: 100%;
                 height: 100%;
                 position: absolute;
+                top: 0;
+                left: 0;
 
                 img {
                     width: 100%;
+                    height: 100%;
+                    display: block;
                     pointer-events: none;
                 }
             }
@@ -262,13 +258,13 @@ export default {
     }
 
     .indicator {
-        transform: translateX(-50%);
-        pointer-events: none;
+        transform: translate(-50%, 0);
         display: flex;
         justify-content: center;
+        pointer-events: none;
         position: absolute;
-        left: 50%;
         bottom: 12px;
+        left: 50%;
 
         .dot {
             width: 10px;
