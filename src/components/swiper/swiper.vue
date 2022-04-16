@@ -21,8 +21,9 @@ export default {
     mixins: [props],
     data() {
         return {
+            currentIndex: null, // 当前所在滑块的索引
+            quantity: null, // 数量
             swiperWidth: null, // swiper宽度
-            proportionHeight: null, // 比例高度
             pressX: null, // 按下水平坐标
             pressY: null, // 按下垂直坐标
             move: null, // 移动距离
@@ -32,8 +33,6 @@ export default {
             elasticForce: null, // 弹力
             sliderLeft: null, // 滑块左侧距离
             currentLeft: null, // 当前左侧距离
-            quantity: null, // 数量
-            currentIndex: 0, // 当前所在滑块的索引
             loopPlayback: null, // 循环切换计时器
             inTransition: false, // 过渡状态
             transitionTiming: null, // 过渡计时器
@@ -41,52 +40,74 @@ export default {
     },
     mounted() {
         /**
-         * 初始获取宽度、左侧距离、数量、弹力
+         * 初始
+         * 设置比例高度、圆角
+         * 设置过渡时长
+         * 设置滑块左侧距离
          * 初始滑块位置
-         * 添加动画
          * 判断开始自动切换
         **/
-        this.addTransition()
-        this.swiperWidth = document.querySelector(".swiper").clientWidth
-        this.quantity = this.data.length
-        this.elasticForce = (this.swiperWidth * 0.4).toFixed(2)
 
-        this.currentIndex = this.current
-        this.sliderLeft = -(this.swiperWidth * this.currentIndex)
-        this.$refs.slider.style.left = this.sliderLeft + "px"
+        this.swiperWidth = document.querySelector(".swiper").clientWidth;
 
-        // 比例
-        let proportion = this.proportion.split(":")
-        this.proportionHeight = (proportion[1] / proportion[0] * this.swiperWidth).toFixed(2)
+        let proportion = this.proportion.split(":");
+        let proportionHeight = (proportion[1] / proportion[0] * this.swiperWidth).toFixed(2);
+        let swiperContent = document.querySelector(".swiper-content");
+        swiperContent.style.height = proportionHeight + 'px';
+        swiperContent.style.borderRadius = this.fillet + 'px';
 
-        let swiperContent = document.querySelector(".swiper-content")
-        swiperContent.style.height = this.proportionHeight + 'px'
-        swiperContent.style.borderRadius = this.fillet + 'px'
+        this.setTransitionDuration();
+        let dot = Array.from(document.querySelectorAll(".dot"));
+        setTimeout(e => dot.forEach(i => i.style.transitionDuration = this.duration + "ms"), 0);
 
+        this.currentIndex = this.current;
+        this.quantity = this.data.length;
+        this.sliderLeft = -(this.swiperWidth * this.currentIndex);
+        this.elasticForce = Math.round(this.swiperWidth * 0.4);
 
-        this.initSliderItem()
-        this.addTransition()
+        this.setAndGetSliderX(true, this.sliderLeft);
+
+        this.initSliderItem();
+        this.setTransitionDuration(true);
 
         if (this.autoplay) this.startAutoPlay();
     },
     methods: {
         // 初始滑块位置
         initSliderItem() {
-            this.$refs.sliderItem.forEach((i, j) => i.style.transform = "transLate(" + j * 100 + "%, 0)")
+            this.$refs.sliderItem.forEach((i, j) => i.style.transform = "transLate(" + j * 100 + "%, 0)");
+        },
+        // 开始自动切换
+        startAutoPlay(later) {
+            clearInterval(this.loopPlayback);
+
+            let num = 1;
+
+            this.loopPlayback = setInterval(e => {
+                this.currentIndex >= this.quantity - 1 ? this.currentIndex = 0 : this.currentIndex++;
+                this.$refs.slider.style.left = -this.currentIndex * this.swiperWidth + "px";
+                this.sliderLeft = this.getSliderLeft();
+
+                this.inTransition = true;
+                this.endTransition();
+
+                if (this.isWaitFor && !later && num == 1) this.startAutoPlay(true);
+
+                num++;
+
+            }, this.isWaitFor && later ? this.interval + this.duration : this.interval)
         },
         // 按下区域
         pressRegion(event) {
-            this.pressX = event.touches[0].clientX
-            this.pressY = event.touches[0].clientY
-            this.leaveX = this.pressX
-            this.currentLeft = this.getCurrentLeft()
+            this.pressX = event.touches[0].clientX;
+            this.pressY = event.touches[0].clientY;
+            this.leaveX = this.pressX;
+            this.currentLeft = this.setAndGetSliderX(true);
 
-            this.removeTransition()
+            this.setTransitionDuration();
 
-            clearInterval(this.loopPlayback)
-            clearTimeout(this.transitionTiming)
-
-            this.$refs.slider.style.left = this.currentLeft + "px"
+            clearInterval(this.loopPlayback);
+            clearTimeout(this.transitionTiming);
         },
         // 滑动区域
         slideRegion(event) {
@@ -114,9 +135,9 @@ export default {
         // 离开区域
         leaveRegion() {
             this.isLevel = null
-            this.currentLeft = this.getCurrentLeft()
+            this.currentLeft = this.setAndGetSliderX()
 
-            this.addTransition()
+            this.setTransitionDuration(true)
 
             // 判断是否移动
             if (this.leaveX && this.leaveX != this.pressX) {
@@ -131,16 +152,32 @@ export default {
                         let spacing = Math.abs(Math.abs(this.currentLeft) - Math.abs(this.sliderLeft))
 
                         // 限制过多连续滑动
-                        if (spacing < this.swiperWidth) {
-                            this.judgeTheSlidingDirection(this.intensity)
+                        if (spacing < this.swiperWidth / 2) {
+                            if (this.intensity > 0) {
+                                this.$refs.slider.style.left = this.sliderLeft + this.swiperWidth + "px"
+                                this.currentIndex <= 0 ? this.currentIndex = this.quantity - 1 : this.currentIndex--
+                            } else {
+                                this.$refs.slider.style.left = this.sliderLeft - this.swiperWidth + "px"
+                                this.currentIndex >= this.quantity - 1 ? this.currentIndex = 0 : this.currentIndex++
+                            }
+
+                            this.sliderLeft = this.getSliderLeft()
                         } else {
                             this.$refs.slider.style.left = this.sliderLeft + "px"
                         }
                     }
                 } else if (this.inTransition) {
                     // 中止过渡
-                    console.log(111)
-                    this.terminationTransition()
+                    console.log("中止")
+                    // 判断方向
+                    if (this.currentLeft % this.swiperWidth + this.swiperWidth > this.swiperWidth / 2) {
+                        this.$refs.slider.style.left = -(Math.floor(Math.abs(this.currentLeft) / this.swiperWidth) * this.swiperWidth) + "px"
+                    } else {
+                        this.$refs.slider.style.left = -(Math.floor(Math.abs(this.currentLeft) / this.swiperWidth) * this.swiperWidth + this.swiperWidth) + "px"
+                    }
+
+                    this.sliderLeft = this.getSliderLeft()
+                    this.currentIndex = Math.abs(this.sliderLeft) / this.swiperWidth
                 }
             } else {
                 this.$refs.slider.style.left = this.sliderLeft + "px"
@@ -152,73 +189,27 @@ export default {
             // 判断开始自动切换
             if (this.autoplay) this.startAutoPlay(this.inTransition);
         },
-        // 判断滑动方向
-        judgeTheSlidingDirection(value) {
-            if (value > 0) {
-                this.$refs.slider.style.left = this.sliderLeft + this.swiperWidth + "px"
-                this.currentIndex <= 0 ? this.currentIndex = this.quantity - 1 : this.currentIndex--
-            } else {
-                this.$refs.slider.style.left = this.sliderLeft - this.swiperWidth + "px"
-                this.currentIndex >= this.quantity - 1 ? this.currentIndex = 0 : this.currentIndex++
-            }
-
-            this.sliderLeft = this.getSliderLeft()
-        },
-        // 开始自动切换
-        startAutoPlay(later) {
-            clearInterval(this.loopPlayback)
-
-            let num = 1
-
-            this.loopPlayback = setInterval(e => {
-                this.currentIndex >= this.quantity - 1 ? this.currentIndex = 0 : this.currentIndex++
-                this.$refs.slider.style.left = -this.currentIndex * this.swiperWidth + "px"
-                this.sliderLeft = this.getSliderLeft()
-
-                this.inTransition = true
-                this.endTransition()
-
-                if (this.isWaitFor && !later && num == 1) this.startAutoPlay(true);
-
-                num++
-
-            }, this.isWaitFor && later ? this.interval + this.duration : this.interval)
-        },
-        // 添加过渡
-        addTransition() {
-            this.$refs.slider.style.transitionDuration = this.duration + "ms"
-        },
-        // 移除过渡
-        removeTransition() {
-            this.$refs.slider.style.transitionDuration = "0ms"
-        },
-        // 中止过渡
-        terminationTransition() {
-            if (this.currentLeft % this.swiperWidth !== 0) {
-                // 判断方向
-                if (this.currentLeft % this.swiperWidth + this.swiperWidth > this.swiperWidth / 2) {
-                    this.$refs.slider.style.left = -(Math.floor(Math.abs(this.currentLeft) / this.swiperWidth) * this.swiperWidth) + "px"
-                } else {
-                    this.$refs.slider.style.left = -(Math.floor(Math.abs(this.currentLeft) / this.swiperWidth) * this.swiperWidth + this.swiperWidth) + "px"
-                }
-
-                this.sliderLeft = this.getSliderLeft()
-                this.currentIndex = Math.abs(this.sliderLeft) / this.swiperWidth
-            }
+        // 设置过渡时长
+        setTransitionDuration(nothing) {
+            this.$refs.slider.style.transitionDuration = (nothing ? this.duration : 0) + "ms";
         },
         // 结束过渡状态
         endTransition() {
             this.transitionTiming = setTimeout(e => {
-                this.inTransition = false
+                this.inTransition = false;
             }, this.duration)
         },
-        // 获取滑块左侧距离
+        // 获取滑块固定位置
         getSliderLeft() {
-            return parseInt(this.$refs.slider.style.left) || 0
+            return parseInt(this.$refs.slider.style.left);
         },
-        // 获取当前左侧距离
-        getCurrentLeft() {
-            return this.$refs.slider.offsetLeft
+        // 设置和获取左侧当前位置
+        setAndGetSliderX(set, value) {
+            let offsetLeft = this.$refs.slider.offsetLeft;
+            if (set) {
+                this.$refs.slider.style.left = (value || offsetLeft) + "px";
+            }
+            return offsetLeft;
         },
     },
 }
