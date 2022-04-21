@@ -1,6 +1,6 @@
 <template>
     <div>
-        <navbar></navbar>
+        <navbar :border="true"></navbar>
     </div>
 </template>
 
