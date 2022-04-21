@@ -1,6 +1,9 @@
 <template>
     <div class="home">
-        <swiper :data="list" :current="1" proportion="1920:1080" :autoplay="false" :circular="false"></swiper>
+        <router-link to="/navbar" tag="div">导航栏</router-link>
+        <router-link to="/tabbar" tag="div">标签栏</router-link>
+        <router-link to="/swiper" tag="div">轮播图</router-link>
+        <router-link to="/indexList" tag="div">索引列表</router-link>
     </div>
 </template>
 
@@ -8,26 +11,33 @@
 export default {
     data() {
         return {
-            list: [
-                "https://img2.baidu.com/it/u=4028963788,1491236689&fm=253&fmt=auto&app=138&f=JPG?w=889&h=500",
-                "https://img1.baidu.com/it/u=1724157493,2813978428&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
-                "https://img1.baidu.com/it/u=1542608407,2645267206&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800",
-                "https://img1.baidu.com/it/u=1568193619,25276165&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=281",
-                "https://img0.baidu.com/it/u=2134805653,2919336616&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-            ]
+
         }
-    },
-    mounted() {
-        setTimeout(e => {
-            this.a++
-        }, 1000)
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .home {
     width: 100%;
-    height: 200vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 10px;
+
+    div {
+        width: calc(50% - 5px);
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        color: #fff;
+        background: #a0eee1;
+        border-radius: 10px;
+
+        & {
+            margin-bottom: 10px;
+        }
+    }
 }
 </style>
