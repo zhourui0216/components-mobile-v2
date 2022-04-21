@@ -44,6 +44,6 @@ export default {
         topSafeHeight: {
             type: Number,
             default: 0
-        }
+        },
     }
 }
