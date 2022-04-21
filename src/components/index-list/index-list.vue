@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="index-list">
         索引列表
     </div>
 </template>

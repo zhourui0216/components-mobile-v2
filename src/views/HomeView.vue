@@ -1,9 +1,9 @@
 <template>
     <div class="home">
-        <router-link to="/navbar" tag="div">导航栏</router-link>
-        <router-link to="/tabbar" tag="div">标签栏</router-link>
-        <router-link to="/swiper" tag="div">轮播图</router-link>
-        <router-link to="/indexList" tag="div">索引列表</router-link>
+        <div @click="go('/navbar')">导航栏</div>
+        <div @click="go('/tabbar')">标签栏</div>
+        <div @click="go('/swiper')">轮播图</div>
+        <div @click="go('/indexList')">索引列表</div>
     </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
     data() {
         return {
 
+        }
+    },
+    methods: {
+        go(path) {
+            this.$router.push({ path })
         }
     }
 }
@@ -24,7 +29,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 10px;
+    padding: 10px 10px 0;
 
     div {
         width: calc(50% - 5px);

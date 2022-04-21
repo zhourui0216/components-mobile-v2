@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="tabbar">
         标签栏
     </div>
 </template>
