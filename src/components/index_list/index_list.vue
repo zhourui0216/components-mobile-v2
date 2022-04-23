@@ -21,7 +21,7 @@
             <p :style="currentIndex == index + 1 ? {color:activeColor,background:activeBackground} : ''" v-for="item,index in indexList" :key="item.id">{{item}}</p>
         </div>
         <!-- 提示标签 -->
-        <transition name="fade-scale">
+        <transition name="fade">
             <div class="tips" ref="tips" :style="{color:activeColor,background:activeBackground}" v-show="showTips">
                 <p>{{tipsValue}}</p>
             </div>
@@ -200,19 +200,19 @@ export default {
         }
     }
 
-    .fade-scale-enter {
+    .fade-enter {
         opacity: 1;
     }
 
-    .fade-scale-enter-active {
+    .fade-enter-active {
         transition: opacity 0s;
     }
 
-    .fade-scale-leave-active {
+    .fade-leave-active {
         transition: opacity 0.6s;
     }
 
-    .fade-scale-leave-to {
+    .fade-leave-to {
         opacity: 0;
     }
 

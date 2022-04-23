@@ -3,17 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import navbar from "./components/navbar/navbar.vue"
-Vue.component("navbar", navbar)
-
-import tabbar from "./components/tabbar/tabbar.vue"
-Vue.component("tabbar", tabbar)
-
-import swiper from "./components/swiper/swiper.vue"
-Vue.component("swiper", swiper)
-
-import indexList from "./components/index-list/index-list.vue"
-Vue.component("indexList", indexList)
+// 引入组件
+import "./utils/importComponents"
 
 Vue.config.productionTip = false
 

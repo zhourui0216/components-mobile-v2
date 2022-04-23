@@ -1,34 +1,34 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomePage from '../views/HomePage.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'HomePage',
+    component: HomePage
   },
   {
     path: "/navbar",
     name: "navbar",
-    component: () => import('../views/pages/navbar.vue')
+    component: () => import('../views/pages/use_navbar.vue')
   },
   {
     path: "/tabbar",
     name: "tabbar",
-    component: () => import('../views/pages/tabbar.vue')
+    component: () => import('../views/pages/use_tabbar.vue')
   },
   {
     path: "/swiper",
     name: "swiper",
-    component: () => import('../views/pages/swiper.vue')
+    component: () => import('../views/pages/use_swiper.vue')
   },
   {
     path: "/indexList",
     name: "indexList",
-    component: () => import('../views/pages/indexList.vue')
+    component: () => import('../views/pages/use_index_list.vue')
   },
 ]
 
