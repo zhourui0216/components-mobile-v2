@@ -13,7 +13,7 @@ export default {
         // 选中标签颜色
         activeColor: {
             type: String,
-            default: "#a0eee1"
+            default: "#7bbfea"
         },
         // 背景颜色
         background: {
