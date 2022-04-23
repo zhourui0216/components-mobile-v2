@@ -6,7 +6,10 @@
 
         <div class="main">
             <index-list :indexList="indexList" :dataList="dataList">
-                <p>顶部</p>
+                <div class="slot">
+                    <p>顶部内容1</p>
+                    <p>顶部内容2</p>
+                </div>
             </index-list>
         </div>
     </div>
@@ -43,6 +46,17 @@ export default {
         width: 100%;
         flex: 1;
         overflow: auto;
+
+        .slot {
+            p {
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                border-bottom: 1px solid #f4f4f4;
+                box-sizing: border-box;
+                padding: 0 20px;
+            }
+        }
     }
 }
 </style>

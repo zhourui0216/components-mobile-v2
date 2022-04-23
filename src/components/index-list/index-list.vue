@@ -111,6 +111,8 @@ export default {
 
             if (this.currentIndex === 0) {
                 this.showTips = false
+                this.tipsValue = this.indexList[0]
+                this.$refs.tips.style.top = this.indexY + this.indexItemHeight / 2 + "px"
                 return
             }
 
