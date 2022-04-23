@@ -5,8 +5,8 @@ export default {
             type: Array,
             required: true
         },
-        // 当前所在滑块的index
-        current: {
+        // 当前所在滑块的索引
+        currentIndex: {
             type: Number,
             default: 0
         },
@@ -64,6 +64,11 @@ export default {
         fillet: {
             type: Number,
             default: 0
+        },
+        // 是否垂直滑动
+        vertical: {
+            type: Boolean,
+            default: false
         },
     }
 }
