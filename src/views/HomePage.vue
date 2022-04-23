@@ -1,9 +1,9 @@
 <template>
     <div class="home">
-        <div @click="go('/navbar')">导航栏</div>
-        <div @click="go('/tabbar')">标签栏</div>
-        <div @click="go('/swiper')">轮播图</div>
-        <div @click="go('/indexList')">索引列表</div>
+        <div @click="go('/use_navbar')">导航栏</div>
+        <div @click="go('/use_tabbar')">标签栏</div>
+        <div @click="go('/use_swiper')">轮播图</div>
+        <div @click="go('/use_index_list')">索引列表</div>
     </div>
 </template>
 
