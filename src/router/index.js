@@ -11,23 +11,23 @@ const routes = [
     component: HomePage
   },
   {
-    path: "/navbar",
-    name: "navbar",
+    path: "/use_navbar",
+    name: "use_navbar",
     component: () => import('../views/pages/use_navbar.vue')
   },
   {
-    path: "/tabbar",
-    name: "tabbar",
+    path: "/use_tabbar",
+    name: "use_tabbar",
     component: () => import('../views/pages/use_tabbar.vue')
   },
   {
-    path: "/swiper",
-    name: "swiper",
+    path: "/use_swiper",
+    name: "use_swiper",
     component: () => import('../views/pages/use_swiper.vue')
   },
   {
-    path: "/indexList",
-    name: "indexList",
+    path: "/use_index_list",
+    name: "use_index_list",
     component: () => import('../views/pages/use_index_list.vue')
   },
 ]
