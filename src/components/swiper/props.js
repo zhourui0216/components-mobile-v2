@@ -23,7 +23,7 @@ export default {
         // 选中指示点颜色
         indicatorActiveColor: {
             type: String,
-            default: "#047ef0"
+            default: "#7bbfea"
         },
         // 是否自动切换
         autoplay: {
