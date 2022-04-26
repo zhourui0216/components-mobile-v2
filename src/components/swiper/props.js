@@ -6,7 +6,7 @@ export default {
             required: true
         },
         // 当前所在滑块的索引
-        currentIndex: {
+        current: {
             type: Number,
             default: 0
         },
@@ -23,7 +23,8 @@ export default {
         // 选中指示点颜色
         indicatorActiveColor: {
             type: String,
-            default: "#7bbfea"
+            default: "#46BA80"
+            // default: "#7bbfea"
         },
         // 是否自动切换
         autoplay: {

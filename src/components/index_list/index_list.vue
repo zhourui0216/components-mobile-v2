@@ -49,7 +49,7 @@ export default {
         }
     },
     mounted() {
-        this.innerHeight = window.innerHeight
+        this.compatible()
         this.indexHeight = this.$refs.index.clientHeight
         this.$refs.index.style.top = (this.innerHeight - this.indexHeight + this.indexTop) / 2 + "px"
 
@@ -123,6 +123,16 @@ export default {
         leave(e) {
             this.scrolling = false
             this.showTips = false
+        },
+        // 兼容ios移动端下拉刷新高度缩小导致侧边定位问题
+        compatible() {
+            let page_height = sessionStorage.getItem("page_height")
+            if (page_height) {
+                this.innerHeight = page_height
+            } else {
+                this.innerHeight = window.innerHeight
+                sessionStorage.setItem("page_height", this.innerHeight)
+            }
         },
     }
 }

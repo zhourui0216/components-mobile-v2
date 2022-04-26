@@ -1,14 +1,14 @@
 <template>
     <div class="swiper">
-        <div class="swiper_container">
-            <div class="swiper_container_slider" ref="slider" :style="{flexDirection:vertical?'column':'row'}" @click="a">
-                <div class="swiper-slider-item" ref="sliderItem" v-for="item,index in data" :key="index">
+        <div class="swiper_container" @touchstart="pressRegion" @touchmove="slideRegion" @touchend="leaveRegion">
+            <div class="swiper_container_slider" ref="slider">
+                <div class="slider_item" ref="sliderItem" v-for="item,index in data" :key="index">
                     <img :src="item">
                 </div>
             </div>
         </div>
-        <div class="indicator" v-if="indicatorDots">
-            <div class="dot" :style="{background: currentIndex == index ? indicatorActiveColor : indicatorColor}" v-for="item,index in data" :key="index">
+        <div class="swiper_indicator" v-if="indicatorDots">
+            <div class="dot" :style="{background: currentIndex == index ? indicatorActiveColor : indicatorColor,transitionDuration: duration + 'ms'}" v-for="item,index in data" :key="index">
                 <!-- 指示点 -->
             </div>
         </div>
@@ -21,6 +21,7 @@ export default {
     mixins: [props],
     data() {
         return {
+            currentIndex: null, // 当前索引
             quantity: null, // 数量
             swiperWidth: null, // swiper宽度
             sliderWidth: null, // 滑块宽度
@@ -41,6 +42,10 @@ export default {
             transitionTiming: null, // 过渡计时器
         }
     },
+    created() {
+        this.currentIndex = this.current
+        this.quantity = this.data.length;
+    },
     mounted() {
         this.swiperWidth = document.querySelector(".swiper").clientWidth;
 
@@ -48,34 +53,24 @@ export default {
         let proportionHeight = (proportion[1] / proportion[0] * this.swiperWidth).toFixed(2);
         let swiperContent = document.querySelector(".swiper_container");
         swiperContent.style.height = proportionHeight + 'px';
-        // swiperContent.style.borderRadius = this.fillet + 'px';
+        swiperContent.style.borderRadius = this.fillet + 'px';
 
-        // this.setDuration(0);
-        // let dot = Array.from(document.querySelectorAll(".dot"));
-        // dot.forEach(i => i.style.transitionDuration = this.duration + "ms");
-
-
-        // this.quantity = this.data.length;
-        // this.sliderWidth = this.swiperWidth * (this.quantity - 1)
-        // this.lastX = -(this.swiperWidth * (this.quantity - 2))
-        // this.sliderLeft = -(this.swiperWidth * this.currentIndex);
-        // this.elasticForce = Math.round(this.swiperWidth * 0.4);
-
-        // this.setSliderX(this.sliderLeft)
-
-        // this.initSliderItem();
-        // this.setDuration(this.duration);
-
-        // if (this.circular) this.connectionPosition(this.sliderLeft)
-        // if (this.autoplay) this.startAutoPlay();
-        // setInterval(() => {
-        //     this.sliderLeft += 10
-        // }, 100);
+        this.initSliderItem();
     },
     methods: {
-        a() {
-            alert(2)
-        }
+        // 初始滑块位置
+        initSliderItem() {
+            this.$refs.sliderItem.forEach((i, j) => i.style.transform = "transLate(" + j * 100 + "%, 0)");
+        },
+        pressRegion() {
+            console.log("按下")
+        },
+        slideRegion() {
+            console.log("移动")
+        },
+        leaveRegion() {
+            console.log("离开")
+        },
     },
 }
 </script>
@@ -93,27 +88,29 @@ export default {
         &_slider {
             width: 100%;
             height: 100%;
-            display: flex;
+            position: relative;
 
-            .swiper-slider-item {
+            .slider_item {
                 width: 100%;
                 height: 100%;
-                flex-shrink: 0;
+                position: absolute;
+                top: 0;
+                left: 0;
 
-                img {
+                > * {
                     width: 100%;
                     height: 100%;
                     display: block;
-                    pointer-events: none;
+                    position: relative;
                 }
             }
         }
     }
 
-    .indicator {
-        transform: translate(-50%, 0);
+    &_indicator {
         display: flex;
         justify-content: center;
+        transform: translate(-50%, 0);
         pointer-events: none;
         position: absolute;
         bottom: 12px;
