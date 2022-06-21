@@ -39,7 +39,7 @@ export default {
         // 切换动画时长
         duration: {
             type: Number,
-            default: 500
+            default: 400
         },
         // 自动切换是否等待动画时长
         isWaitFor: {

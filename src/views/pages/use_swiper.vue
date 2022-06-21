@@ -1,6 +1,6 @@
 <template>
     <div>
-        <swiper :data="list" :current="0" proportion="1920:1080" :autoplay="false" :circular="false"></swiper>
+        <swiper :data="list" :current="2" proportion="1920:1080" :autoplay="false" :circular="false"></swiper>
     </div>
 </template>
 
