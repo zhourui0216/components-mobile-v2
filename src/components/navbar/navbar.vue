@@ -3,7 +3,7 @@
         <div class="navbar-content">
             <!-- 返回 -->
             <div class="back" v-if="showBack" @click="back()">
-                <svg class="icon" width="24" height="24" :style="{fill: backColor}" t="1650540591785" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2039">
+                <svg class="icon" :style="{fill: backColor}" t="1650540591785" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2039">
                     <path d="M624.788992 204.047974 585.205965 164.464026 219.560038 530.185011 585.205965 895.864013 624.788992 856.280986 298.663014 530.16105Z" p-id="2040"></path>
                 </svg>
             </div>
@@ -63,6 +63,11 @@ export default {
             display: flex;
             align-items: center;
             left: 12px;
+
+            svg {
+                width: 24px;
+                height: 24px;
+            }
         }
 
         .title {

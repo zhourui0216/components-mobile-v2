@@ -36,6 +36,7 @@ export default {
         height: 50px;
         text-align: center;
         line-height: 50px;
+        font-size: 16px;
         color: #fff;
         background: #7bbfea;
         border-radius: 10px;
