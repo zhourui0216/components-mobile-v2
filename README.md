@@ -1,4 +1,4 @@
-# component
+# components-mobile-vue2
 
 ## Project setup
 ```

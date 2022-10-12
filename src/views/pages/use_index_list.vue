@@ -16,8 +16,14 @@
 </template>
 
 <script>
-import cityRanking from "../../assets/cityRanking.js"
+import navbar from "../../components/navbar/index.vue";
+import indexList from "../../components/index_list/index.vue";
+import cityRanking from "../../assets/cityRanking.js";
 export default {
+    components: {
+        navbar,
+        indexList
+    },
     data() {
         return {
             indexList: ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K",

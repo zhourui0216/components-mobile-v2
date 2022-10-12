@@ -1,3 +1,16 @@
+/**
+ * 下载依赖
+ * npm install postcss-px-to-viewport --save-dev
+ *
+ * 配置注意事项
+ * 1.propList: 当有些属性的单位我们不希望转换的时候，可以添加在数组后面，并在前面加上!号，如propList: ["*","!letter-spacing"]
+ * 2.selectorBlackList：转换的黑名单，在黑名单里面的我们可以写入字符串，只要类名包含有这个字符串，就不会被匹配。
+ *   比如selectorBlackList: [‘wrap’],它表示形如wrap,my-wrap,wrapper这样的类名的单位，都不会被转换
+ *
+ * UI库的兼容问题(例vant)
+ * const designWidth = file.dirname.includes(path.join('node_modules', 'vant')) ? 375 : 750;
+ * viewportWidth: designWidth
+ */
 module.exports = {
     plugins: {
         autoprefixer: {}, // 用来给不同的浏览器自动添加相应前缀，如-webkit-，-moz-等等

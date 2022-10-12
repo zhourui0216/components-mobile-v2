@@ -5,7 +5,11 @@
 </template>
 
 <script>
+import navbar from "../../components/navbar/index.vue";
 export default {
+    components: {
+        navbar
+    },
     data() {
         return {
 

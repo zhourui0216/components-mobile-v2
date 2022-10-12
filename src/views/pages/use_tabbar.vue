@@ -5,7 +5,11 @@
 </template>
 
 <script>
+import tabbar from "../../components/tabbar/index.vue";
 export default {
+    components: {
+        tabbar
+    },
     data() {
         return {
 
@@ -15,4 +19,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 </style>
